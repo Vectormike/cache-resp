@@ -3,7 +3,8 @@ const fetch = require('node-fetch');
 const ApiError = require('../utils/ApiError');
 
 const getUsers = async () => {
-  const users = await fetch('https://jsonplaceholder.typicode.com/users');
+  const data = await fetch('https://jsonplaceholder.typicode.com/users');
+  const users = await data.json();
   if (!users) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Users not found');
   }

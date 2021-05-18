@@ -1,20 +1,11 @@
 /* eslint-disable no-unused-expressions */
 const redis = require('redis');
-const { debug } = require('./logger');
 const { redisHost, redisPort } = require('./config');
 
-const client = redis.createClient(redisPort, redisHost);
-
-client.on('connect', function () {
-  debug('Redis client connected');
-});
-
-client.on('error', function (err) {
-  debug(`Something went wrong ${err}`);
-});
+const client = redis.createClient(redisPort);
 
 const set = (key, value) => {
-  client.set(key, JSON.stringify(value));
+  client.setex(key, 200, JSON.stringify(value));
 };
 
 const get = (req, res, next) => {

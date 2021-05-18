@@ -1,8 +1,24 @@
+const redis = require('redis');
 const app = require('./app');
-const config = require('./config/config');
 const logger = require('./config/logger');
+const config = require('./config/config');
+const { redisHost, redisPort } = require('./config/config');
 
 let server;
+
+const client = redis.createClient(redisPort, redisHost);
+
+client.on('connect', function () {
+  logger.info('Redis client connected');
+  server = app.listen(config.port, () => {
+    logger.info(`Listening to port ${config.port}`);
+  });
+});
+
+client.on('error', function (err) {
+  logger.debug(`Something went wrong ${err}`);
+});
+
 const exitHandler = () => {
   if (server) {
     server.close(() => {

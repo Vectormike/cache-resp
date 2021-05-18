@@ -4,7 +4,7 @@ const { set } = require('../config/redis');
 const { userService } = require('../services');
 
 const getAll = catchAsync(async (req, res) => {
-  const users = userService.getUsers;
+  const users = await userService.getUsers();
   set(req.route.path, users);
   res.status(httpStatus.OK).send(users);
 });
